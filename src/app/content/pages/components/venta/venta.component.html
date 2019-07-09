@@ -1,0 +1,155 @@
+<div class="row">
+
+  <div class="col-xl-9 col-lg-8">
+    <div class="m-portlet m-portlet--full-height m-portlet--tabs  ">
+      <div class="m-portlet__body">
+          <div *ngIf="exito">
+              <mat-card class="successToast">
+                  <span class="textError">Operacion Exitosa.</span>
+              </mat-card>
+          </div>
+          <div *ngIf="fracaso">    
+            <mat-card class="errorToast">
+                <span class="textError">Operacion Fallida.</span>
+            </mat-card>
+          </div>
+        <form class="m-form m-form--fit m-form--label-align-right" [formGroup]="form">
+
+          <div class="m-portlet__body">
+            <div class="form-group m-form__group row">
+
+              <label for="example-text-input" class="col-2 col-form-label">Agente</label>
+              <mat-form-field  class="col-4">
+                <mat-select formControlName="Agente">
+                  <mat-option *ngFor="let agente of agentes" [value]="agente.id" (onSelectionChange)="change($event)" >
+                    {{ agente.nombre }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <label class="col-2 col-form-label">Tipo</label>
+              <mat-form-field  class="col-4">
+                <mat-select formControlName="Tipo" >
+                  <mat-option *ngFor="let tipo of tipos" [value]="tipo.value" (onSelectionChange)="changeTipo($event)">
+                    {{ tipo.viewValue }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+
+            </div>
+            <div class="form-group m-form__group row">
+
+              <label class="col-2 col-form-label">MSISDN</label>
+              <mat-form-field  class="col-4">
+                <mat-select formControlName="Msisdn">
+                  <mat-option *ngFor="let codigo of codigos" [value]="codigo.msisdn" (onSelectionChange)="changeMsisdn($event)">
+                    {{ codigo.msisdn }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <label  class="col-2 col-form-label">Importe a Pagar</label>
+              <mat-form-field  class="col-4">
+                <input matInput type="number" placeholder="" (ngModelChange)="modelChanged($event)" formControlName="ImportePagar">
+              </mat-form-field>
+
+            </div>
+            <div class="form-group m-form__group row">
+
+              <label class="col-2 col-form-label">Codigo Epin</label>
+              <div class="col-4">
+                <p><b>{{code ? code.epin_code : vacio}}</b></p>
+              </div>
+
+              <label class="col-2 col-form-label">Importe a Acreditar</label>
+              <div class="col-4">
+                  <p><b>{{importe ? importe : vacio | number : 2}}</b></p>
+              </div>
+
+            </div>
+            <div class="form-group m-form__group row">
+
+              <label  class="col-2 col-form-label">Descuento</label>
+              <div class="col-4">
+                <p><b>{{code ? code.descuento : 0}} % </b></p>
+              </div>
+
+            </div>
+
+
+            <div *ngIf="tipoSelected">
+            <div class="m-form__seperator m-form__seperator--dashed m-form__seperator--space-2x"></div>
+            <div class="form-group m-form__group row">
+              <div class="col-10 ml-auto">
+                <h3 class="m-form__section">Pago al Contado</h3>
+              </div>
+            </div>
+            <div class="form-group m-form__group row">
+                <label class="col-2 col-form-label">Forma de Pago</label>
+                <mat-form-field  class="col-4">
+                  <mat-select >
+                    <mat-option *ngFor="let forma of formas" [value]="forma.value" (onSelectionChange)="changeForma($event)">
+                      {{ forma.viewValue }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="form-group m-form__group row">
+              <label  class="col-2 col-form-label">Banco</label>
+              <mat-form-field  class="col-4">
+                <mat-select formControlName="Banco">
+                  <mat-option *ngFor="let banco of bancos" [value]="banco.codigo">
+                    {{ banco.nombre }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="form-group m-form__group row" *ngIf="!choice">
+                <label class="col-2 col-form-label">Transaccion</label>
+                <mat-form-field  class="col-4">
+                    <input matInput type="number" placeholder=""  formControlName="Transaccion">
+                </mat-form-field>
+            </div>
+            <div class="form-group m-form__group row" *ngIf="choice" >
+              <label class="col-2 col-form-label">No. de Cheque</label>
+              <mat-form-field  class="col-4">
+                  <input matInput type="number" placeholder=""  formControlName="Cheque">
+              </mat-form-field>
+            </div>
+            <div class="form-group m-form__group row">
+              <label class="col-2 col-form-label">Cuenta</label>
+              <mat-form-field  class="col-4">
+                  <input matInput type="number" placeholder=""  formControlName="Cuenta">
+              </mat-form-field>
+            </div>
+            <div class="form-group m-form__group row" *ngIf="choice">
+              <label class="col-2 col-form-label" >No. de Boleta</label>
+              <mat-form-field  class="col-4">
+                  <input matInput type="number" placeholder=""  formControlName="Boleta">
+              </mat-form-field>
+            </div>
+
+          </div>
+          </div>
+          <div class="m-portlet__foot m-portlet__foot--fit">
+            <div >
+              <div class="row">
+                <div class="col-2"></div>
+                <div class="col-7">
+                  <m-spinner-button [options]="spinner" (click)="submit()">Comprar</m-spinner-button>
+                  <button  class="btn btn-secondary m-btn m-btn--air m-btn--custom" (click)="clean()">Limpiar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+        </form>
+
+
+
+      </div>
+    </div>
+  </div>
+</div>
