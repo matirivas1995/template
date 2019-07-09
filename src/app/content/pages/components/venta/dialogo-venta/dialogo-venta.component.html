@@ -1,0 +1,22 @@
+<h2 mat-dialog-title>Confirmar Venta Epin</h2>
+
+<mat-dialog-content>
+  <p><b>Agente: </b> {{compra.agente}}</p>
+  <p><b>Linea:</b> {{compra.msisdn}}</p>
+  <p><b>Cod. Epin:</b> {{compra.cod_epin}}</p>
+  <p><b>Importe a Cobrar:</b> {{compra.monto_cobrado}}</p>
+  <p><b>Importe a Acreditar: </b>{{compra.monto_acreditado}}</p>
+  <p><b>Forma de Pago:</b> {{compra.tipo}}</p>
+  <p><b>Mensaje de Confirmacion:</b> {{compra.mensaje}}</p>
+  <div >
+      <div class="row">
+        <div class="col-2"></div>
+          <div class="col-7">
+            <button  class="btn btn-accent m-btn m-btn--air m-btn--custom" *ngIf="compra.codigo_mensaje == 84" (click)="save()">Confirmar</button>&nbsp;&nbsp;
+
+            <button  class="btn btn-secondary m-btn m-btn--air m-btn--custom" (click)="cancel()">Cancelar</button>
+          </div>
+      </div>
+  </div>
+</mat-dialog-content>
+

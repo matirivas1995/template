@@ -1,0 +1,152 @@
+<m-portlet [loading$]="dataSource.loading$">
+	<!-- use ng-container[mPortletHeadTitle] for the title -->
+	<ng-container mPortletHeadTitle>
+		<div class="m-portlet__head-title">
+			<h3 class="m-portlet__head-text">
+				Compras Recientes
+			</h3>
+		</div>
+	</ng-container>
+
+	<!-- use ng-container[mPortletBody] for the body content -->
+	<ng-container mPortletBody>
+			<m-spinner-button [options]="spinner" *ngIf="!enabled" (click)="habilitar()">Habilitar Filtros</m-spinner-button>
+			<form class="m-login__form m-form" *ngIf="enabled" [formGroup]="form" >
+				<div class="row">
+					<div class="col-4">
+						<div class="form-group">
+							<mat-form-field>
+								<mat-label>Fecha Desde</mat-label>
+								<input matInput [matDatepicker]="picker" formControlName="date1" placeholder="Elegir una fecha">
+								<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+								<mat-datepicker #picker></mat-datepicker>
+							</mat-form-field>
+						</div>
+						<div class="form-group">
+							<mat-form-field>
+									<mat-label>Fecha Hasta</mat-label>
+									<input matInput [matDatepicker]="picker2" formControlName="date2" placeholder="Elegir una fecha">
+									<mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+									<mat-datepicker #picker2></mat-datepicker>
+							</mat-form-field>
+						</div>
+					</div>
+					<div class="col-4">
+							<div class="form-group">
+									<mat-form-field>
+										<mat-label>MSISDN</mat-label>
+										<input matInput type="text" name="msisdn" placeholder="098xxxxxxx" autocomplete="off"
+										formControlName="numero" >
+									</mat-form-field>
+								</div>
+								<div class="form-group">
+										<mat-form-field>
+											<mat-label>EPIN-CODE</mat-label>
+											<input matInput minlength="4" type="text" name="epin_code" placeholder="epin code" autocomplete="off"
+											formControlName="codigo" >
+										</mat-form-field>
+								</div>
+					</div>
+				</div>
+			</form>
+				<!--begin::Action-->
+				<div *ngIf="enabled" class="m-login__action m-login__action--fit">
+					<m-spinner-button [options]="spinner" (click)="submit()">Filtrar</m-spinner-button>
+					<m-spinner-button [options]="spinner" (click)="deshabilitar()">Eliminar Filtros</m-spinner-button>
+				</div>
+		<!-- See off.documentations 'https://material.angular.io/components/table/overview' -->
+		<div perfectScrollbar style="max-height: 40vh;" class="mat-table__wrapper mat-table__wrapper--dashboard">
+			<!-- Checkbox Column -->
+			<!-- Table with selection -->
+			<!-- https://run.stackblitz.com/api/angular/v1?file=app%2Ftable-selection-example.ts -->
+			<table mat-table class="lmat-elevation-z8" [dataSource]="dataSource" matSort matSortActive="banco.codigo" matSortDirection="asc" matSortDisableClear>
+				<ng-container matColumnDef="banco">
+					<th mat-header-cell *matHeaderCellDef mat-sort-header="banco.codigo">Banco</th>
+					<td mat-cell *matCellDef="let product" class="mat-column-vinCode">{{product.banco ? product.banco.codigo : vacio }}</td>
+				</ng-container>
+
+				<ng-container matColumnDef="cod_resp">
+						<th mat-header-cell *matHeaderCellDef mat-sort-header="codigo_respuesta">Cod. Resp.</th>
+						<td mat-cell *matCellDef="let product">{{product.codigo_respuesta}}</td>
+				</ng-container>
+
+				<ng-container matColumnDef="tipo">
+					<th mat-header-cell *matHeaderCellDef mat-sort-header="codigo_accion">Tipo</th>
+					<td mat-cell *matCellDef="let product">{{product.codigo_accion}}</td>
+				</ng-container>
+
+				<ng-container matColumnDef="agente">
+					<th mat-header-cell *matHeaderCellDef mat-sort-header="msisdn_epin.epin_code">Agente</th>
+					<td mat-cell *matCellDef="let product">{{product.msisdn_epin ? product.msisdn_epin.epin_code : vacio}}</td>
+				</ng-container>
+
+				<ng-container matColumnDef="msisdn">
+					<th mat-header-cell *matHeaderCellDef mat-sort-header="msisdn_epin.msisdn">MSISDN</th>
+					<td mat-cell *matCellDef="let product">{{product.msisdn_epin ? product.msisdn_epin.msisdn : vacio}}</td>
+				</ng-container>
+
+
+				<ng-container matColumnDef="monto">
+					<th mat-header-cell *matHeaderCellDef mat-sort-header="monto_cobrado">Monto</th>
+					<td mat-cell *matCellDef="let product">{{product.monto_cobrado}}</td>
+				</ng-container>
+
+				<ng-container matColumnDef="fecha">
+					<th mat-header-cell *matHeaderCellDef mat-sort-header="fechahora">Fecha</th>
+					<td mat-cell *matCellDef="let product">{{product.fechahora | slice:0:12}}</td>
+				</ng-container>
+
+				<ng-container matColumnDef="hora">
+					<th mat-header-cell *matHeaderCellDef mat-sort-header>Hora</th>
+					<td mat-cell *matCellDef="let product">{{product.fechahora | slice:-10}}</td>
+				</ng-container>
+
+				<ng-container matColumnDef="nro_trx">
+					<th mat-header-cell *matHeaderCellDef mat-sort-header="nro_transaccion">Nro. Trx</th>
+					<td mat-cell *matCellDef="let product">{{product.nro_transaccion}}</td>
+				</ng-container>
+
+				<ng-container matColumnDef="estado">
+					<th mat-header-cell *matHeaderCellDef mat-sort-header="exito">Estado</th>
+					<td mat-cell *matCellDef="let product">{{product.exito ? 'OK' : 'ERROR'}}</td>
+				</ng-container>
+
+				<ng-container matColumnDef="plataforma">
+					<th mat-header-cell *matHeaderCellDef mat-sort-header="plataforma">Plataforma</th>
+					<td mat-cell *matCellDef="let product">{{product.plataforma}}</td>
+				</ng-container>
+
+				<ng-container matColumnDef="pdf">
+					<th mat-header-cell *matHeaderCellDef mat-sort-header>PDF</th>
+					<td mat-cell *matCellDef="let product" >
+						<a *ngIf="product.exito && product.plataforma==='EPIN'" (click)="downloadPdf(product)"  class="m-nav__link">
+							<i class="m-nav__link-icon flaticon-doc"></i>
+						</a>
+					</td>
+				</ng-container>
+
+				<ng-container matColumnDef="detalles">
+					<th mat-header-cell *matHeaderCellDef mat-sort-header>Detalles</th>
+					<td mat-cell *matCellDef="let product">
+						<a  class="m-nav__link"  (click)="viewData(product)">
+							<i class="m-nav__link-icon flaticon-search"></i>
+						</a>
+					</td>
+				</ng-container>
+
+
+				<tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+				<tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+			</table>
+
+			<div class="mat-table__message" *ngIf="!dataSource.hasItems">No records found</div>
+		</div>
+		<!-- start: BOTTOM -->
+		<div class="mat-table__bottom">
+			<mat-spinner [diameter]="20" *ngIf="dataSource.loading$ | async"></mat-spinner>
+			<mat-spinner [diameter]="20" *ngIf="pdf"></mat-spinner>
+			<mat-paginator [pageSize]="6" [pageSizeOptions]="[3, 6, 15]" [length]="dataSource.paginatorTotal$ | async" [showFirstLastButtons]="true"></mat-paginator>
+		</div>
+		<!-- end: BOTTOM -->
+	</ng-container>
+</m-portlet>

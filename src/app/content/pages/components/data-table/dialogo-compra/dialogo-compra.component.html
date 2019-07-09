@@ -1,0 +1,15 @@
+<h2 mat-dialog-title>Detalles de la Compra</h2>
+
+<mat-dialog-content>
+  <p><b>Estado de la compra: </b> {{compra.exito ? 'OK' : 'ERROR'}}</p>
+  <p><b>Respuesta:</b> {{compra.descripcion_respuesta}}</p>
+  <p><b>Codigo de Respuesta:</b> {{compra.codigo_respuesta}}</p>
+  <p><b>Nro de Transaccion:</b> {{compra.nro_transaccion}}</p>
+  <p><b>Entidad Bancaria: </b>{{compra.banco ? compra.banco.nombre : vacio}}</p>
+  <p><b>Fecha de Transaccion:</b> {{compra.fechahora}}</p>
+  <p><b>Monto de Transaccion:</b> {{compra.monto_cobrado}}</p>
+  <p><b>Tipo de Transaccion:</b> {{compra.codigo_accion}}</p>
+  <p><b>Agente:</b> {{compra.msisdn_epin ? compra.msisdn_epin.dealer.nombre : vacio}}</p>
+  <p><b>Epin code:</b> {{compra.msisdn_epin ? compra.msisdn_epin.epin_code : vacio}}</p>
+</mat-dialog-content>
+
